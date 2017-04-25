@@ -30,7 +30,7 @@ do
   done
 
   echo "{usage::" >> /tmp/traffic.dat
-  iptables -L RRDIPT -vnx -t filter | grep ${LAN_TYPE} | awk '{ if ($8 == "0.0.0.0/0") { upload[$9]=$2 } else if ($9 == "0.0.0.0/0") download[$8]=$2 } END { for(item in upload) printf "%s:%.2f:%.2f;", item, upload[item]/1048576, download[item]/1048576}' >> /tmp/traffic.dat
+  iptables -L RRDIPT -vnx -t filter | grep ${LAN_TYPE} | awk '{ if ($8 == "0.0.0.0/0") { download[$9]=$2 } else if ($9 == "0.0.0.0/0") upload[$8]=$2 } END { for(item in upload) printf "%s:%.2f:%.2f;", item, upload[item]/1048576, download[item]/1048576}' >> /tmp/traffic.dat
   echo "}" >> /tmp/traffic.dat
 
   mv -f /tmp/traffic.dat /tmp/www/traffic.asp
