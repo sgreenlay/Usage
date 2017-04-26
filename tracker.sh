@@ -39,16 +39,14 @@ do
   echo "calc () { echo \$1 \$2 | awk '{ printf \"%f\", \$1 + \$2 }'; }" > /tmp/traffic_update.sh
   iptables -L RRDIPT -vnx -t filter | grep ${LAN_TYPE} | awk '{ if ($8 == "0.0.0.0/0") { download[$9]=$2 } else if ($9 == "0.0.0.0/0") upload[$8]=$2 } END { for(item in upload) { {split(item, ip, ".")} { printf "if [ -z ${local_%s_upload+x} ]; then\necho \"%s\:%.2f\:%.2f;\";\nelse\na=`calc $local_%s_upload %.2f`;\nb=`calc $local_%s_download %.2f`;\necho \"%s\:$a\:$b;\"\nfi\n", ip[4], item, upload[item]/1048576, download[item]/1048576, ip[4], upload[item]/1048576, ip[4], download[item]/1048576, item}}}' >> /tmp/traffic_update.sh
 
-  echo "{usage::" >> /tmp/traffic.dat
+  echo "{usage::" > /tmp/traffic.dat
   . /tmp/traffic_update.sh >> /tmp/traffic.dat
   echo "}" >> /tmp/traffic.dat
 
   rm /tmp/traffic_update.sh
 
-  cat /tmp/traffic.dat | sed ':a;N;$!ba;s/\n//g' > /tmp/traffic.dat
-
-  mv -f /tmp/traffic.dat /tmp/www/traffic.asp
-  cp -f /tmp/www/traffic.asp /jffs/traffic.bk
+  cat /tmp/traffic.dat | sed ':a;N;$!ba;s/\n//g' > /tmp/www/traffic.asp
+  cp /tmp/www/traffic.asp /jffs/traffic.bk
 
   sleep 10
 done

@@ -49,19 +49,21 @@ function update_UsageTable(usage) {
         cell.style = "text-align: center;"
         row.appendChild(cell);
 
-        var upload = info[1];
+        var upload = parseFloat(info[1]);
+        upload = upload.toFixed(2);
         cell = document.createElement("td");
         cell.innerHTML = upload;
         cell.style = "text-align: center;"
         row.appendChild(cell);
 
-        var download = info[2];
+        var download = parseFloat(info[2]);
+        download = download.toFixed(2);
         cell = document.createElement("td");
         cell.innerHTML = download;
         cell.style = "text-align: center;"
         row.appendChild(cell);
 
-        var total = parseFloat(info[1]) + parseFloat(info[2]);
+        var total = parseFloat(upload) + parseFloat(download);
         total = total.toFixed(2);
         cell = document.createElement("td");
         cell.innerHTML = total;
