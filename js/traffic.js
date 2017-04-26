@@ -20,19 +20,19 @@ function update_UsageTable(usage) {
     cell = document.createElement("th");
     cell.width = "25%";
     cell.style = "text-align: center;"
-    cell.innerHTML = "Upload (Mb)";
+    cell.innerHTML = "Upload";
     header.appendChild(cell);
 
     cell = document.createElement("th");
     cell.width = "25%";
     cell.style = "text-align: center;"
-    cell.innerHTML = "Download (Mb)";
+    cell.innerHTML = "Download";
     header.appendChild(cell);
 
     cell = document.createElement("th");
     cell.width = "25%";
     cell.style = "text-align: center;"
-    cell.innerHTML = "Total (Mb)";
+    cell.innerHTML = "Total";
     header.appendChild(cell);
 
     var clients = usage.split(';');
