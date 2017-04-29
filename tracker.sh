@@ -1,7 +1,5 @@
 #!/bin/sh
 
-MAX_BANDWIDTH=10000000000 # Bytes
-
 # Bandwidth Download/Upload Rate Counter
 LAN_TYPE=$(nvram get lan_ipaddr | awk ' { FS="."; print $1"."$2 }')
 
@@ -11,12 +9,12 @@ if [ -f /jffs/traffic.bk ]; then
   . /tmp/traffic_bk.sh
   rm /tmp/traffic_bk.sh
 
-  mv -f /jffs/traffic.bk /tmp/www/traffic.asp
+  cp /jffs/traffic.bk /tmp/www/traffic.asp
 fi
 
 while :
 do
-  # Create the RRDIPT CHAIN (it doesn't matter if it already exists).
+  # Create the RRDIPT CHAIN (it doesn't matter if it already exists)
   iptables -N RRDIPT 2> /dev/null
 
   # Add the RRDIPT CHAIN to the FORWARD chain (if non existing)
@@ -54,9 +52,15 @@ do
   cp /tmp/www/traffic.asp /jffs/traffic.bk
 
   # Enforce bandwidth limits
-  cat /jffs/traffic.bk | sed 's/{usage:://' | sed 's/;}//' | awk -v max=$MAX_BANDWIDTH '{ split($0, a, ";") } END { for(i in a) { split(a[i], usage, ":"); sum+=usage[2]; sum+=usage[3] }; { if (sum > max) { printf ". /tmp/Usage/scripts/disable_wan.sh" } } }' > /tmp/bandwidth_enforce.sh
-  . /tmp/bandwidth_enforce.sh
-  rm /tmp/traffic_update.sh
+  MAX_BANDWIDTH=$(nvram get usage_max) # Bytes
+
+  if [ -z "${MAX_BANDWIDTH+x}" ]; then 
+    echo "No bandwidth limits set" > /dev/null;
+  else
+    cat /jffs/traffic.bk | sed 's/{usage:://' | sed 's/;}//' | awk -v max=$MAX_BANDWIDTH '{ split($0, a, ";") } END { for(i in a) { split(a[i], usage, ":"); sum+=usage[2]; sum+=usage[3] }; { if (sum > max) { printf ". /tmp/Usage/scripts/disable_wan.sh" } } }' > /tmp/bandwidth_enforce.sh;
+    . /tmp/bandwidth_enforce.sh;
+    rm /tmp/bandwidth_enforce.sh;
+  fi
 
   sleep 10
 done
