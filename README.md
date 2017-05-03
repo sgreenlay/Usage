@@ -27,3 +27,5 @@ nvram commit
 # Future work
 - Reset bandwidth counter at the beginning of the month and re-enable WAN if it was disabled
 - Enforce per-client bandwidth caps
+- Add visualization to the web view
+- Re-implement in a sane programming language
