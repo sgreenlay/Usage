@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Set-up cron job for reset
+echo '0 0 1 * * . /tmp/Usage/scripts/reset_tracker.sh' > /tmp/crontab
+
 # Bandwidth Download/Upload Rate Counter
 LAN_TYPE=$(nvram get lan_ipaddr | awk ' { FS="."; print $1"."$2 }')
 
@@ -11,6 +14,9 @@ if [ -f /jffs/traffic.bk ]; then
 
   cp /jffs/traffic.bk /tmp/www/traffic.asp
 fi
+
+# Wait 30s before tracking begins
+sleep 30
 
 while :
 do
